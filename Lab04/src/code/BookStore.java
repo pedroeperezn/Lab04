@@ -151,8 +151,16 @@ public class BookStore {
      * Prints titles that contain the substring, along with option with case sensitive.
      * @param substring The substring .
      * @param caseSensitive Whether the match should be case-sensitive.
+     * @throws IllegalArgumentException if the method's substring is blank or null
      */
-    public void printTitlesContaining(String substring, boolean caseSensitive) {
+    public void printTitlesContaining(String substring, boolean caseSensitive) throws IllegalArgumentException 
+    {
+        // Adding exception handling
+        if (substring == null || substring.isBlank())
+        {
+            throw new IllegalArgumentException("bad string");
+        }
+
         for (Novel novel : novels) {
             if (novel != null && novel.getTitle() != null && !novel.getTitle().isBlank()) {
                 String title = novel.getTitle();
@@ -197,7 +205,14 @@ public class BookStore {
      * @param property Either "author" or "title".
      * @return The longest title or author name.
      */
-    public String getLongest(String property) {
+    public String getLongest(String property) throws IllegalNovelPropertyException
+    {
+
+        if (!property.equalsIgnoreCase("title") || !property.equalsIgnoreCase("author"))
+        {
+            throw new IllegalNovelPropertyException();
+        }
+
         String longest = null;
         if (property.equalsIgnoreCase("author")) {
             for (Novel novel : novels) {
@@ -231,14 +246,27 @@ public class BookStore {
         }
 
         BookStore b = new BookStore(args[0]);
-        b.printAllTitles();
-        b.printTitlesContaining("the", false);
-        b.printTitlesContaining("the", true);
-        b.printTitlesOfLength(13);
-        b.printNameStartsEndsWith("aN");
-        System.out.println(b.getLongest("xyz"));
-        System.out.println(b.getLongest("AutHor"));
-        System.out.println(b.getLongest("titlE"));
+
+        // Try block trying all methods
+        try
+        {
+            b.printAllTitles();
+            b.printTitlesOfLength(13);
+            b.printNameStartsEndsWith("aN");
+            b.printTitlesContaining("the", false);
+            //System.out.println(b.getLongest("xyz"));
+            System.out.println(b.getLongest("AutHor"));
+            System.out.println(b.getLongest("titlE"));
+        }
+        // Catches for each possible exception
+        catch(IllegalArgumentException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IllegalNovelPropertyException e)
+        {
+            System.out.println(e.getMessage());
+        }
 
     }
 }
