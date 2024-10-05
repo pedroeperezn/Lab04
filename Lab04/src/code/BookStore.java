@@ -4,7 +4,8 @@ import java.util.List;
 /**
  * Models a bookstore with a list of novels.
  * @author Pedro
- * @version 1.0
+ * @author Jaskirat
+ * @version 1.1
  */
 public class BookStore {
     private final String storeName;
@@ -153,7 +154,7 @@ public class BookStore {
      * @param caseSensitive Whether the match should be case-sensitive.
      * @throws IllegalArgumentException if the method's substring is blank or null
      */
-    public void printTitlesContaining(String substring, boolean caseSensitive) throws IllegalArgumentException 
+    public void printTitlesContaining(String substring, boolean caseSensitive) throws IllegalArgumentException
     {
         // Adding exception handling
         if (substring == null || substring.isBlank())
@@ -176,8 +177,12 @@ public class BookStore {
     /**
      * Prints titles that have the same length.
      * @param length the require length.
+     * @throws IllegalArgumentException if length is 0 or negative with the message “bad length”
      */
-    public void printTitlesOfLength(int length) {
+    public void printTitlesOfLength(int length) throws IllegalArgumentException {
+        if (length<=0){
+            throw new IllegalArgumentException("bad length");
+        }
         for (Novel novel : novels) {
             if (novel != null && novel.getTitle() != null && novel.getTitle().length() == length) {
                 System.out.println(novel.getTitle());
@@ -185,11 +190,17 @@ public class BookStore {
         }
     }
 
+
     /**
      * Prints author names that start or end with the substring, case insensitive.
      * @param substring The substring require to search for author names.
+     * @throws IllegalNameException if the substring parameter is null or blank
      */
-    public void printNameStartsEndsWith(String substring) {
+    public void printNameStartsEndsWith(String substring) throws IllegalNameException {
+        if (substring == null|| substring.trim().isEmpty())
+        {
+            throw new IllegalNameException();
+        }
         for (Novel novel : novels) {
             if (novel != null && novel.getAuthorName() != null) {
                 String author = novel.getAuthorName().toLowerCase();
@@ -264,6 +275,10 @@ public class BookStore {
             System.out.println(e.getMessage());
         }
         catch(IllegalNovelPropertyException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IllegalNameException e)
         {
             System.out.println(e.getMessage());
         }
